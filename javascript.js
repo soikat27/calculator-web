@@ -1,8 +1,9 @@
 // ----- VARIABLES -----
-let operand1 = "";
-let operator = "";
-let operand2 = "";
-let result = "";
+let state = {
+    operand1: "",
+    operator: "",
+    operand2: "",
+}
 
 // ----- FUNCTIONS -----
 // general operator
@@ -24,7 +25,7 @@ function operate(a, operator, b) {
 
 // Addition operation
 function add (a, b) {
-    return a+b;
+    return Number(a)+Number(b);
 }
 
 // subtraction operation

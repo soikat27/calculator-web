@@ -4,24 +4,119 @@
     box-sizing: border-box;
 }
 
-.board {
-    display: flex;
-    flex-direction: column;
-}
-
-.board button {
-    padding: 14px 28px;
-}
-
 body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    color: #1a1a18;
+    background-color: #f4f2ef;
+}
+
+.calc {
+    width: 100%;
+    max-width: 280px;
+    padding: 1.5rem 1.25rem 1.35rem;
+    background-color: #fafaf8;
+    border: 1px solid rgba(26, 26, 24, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(26, 26, 24, 0.04),
+        0 12px 40px rgba(26, 26, 24, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+h1 {
+    align-self: flex-start;
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6b6a66;
 }
 
 .screen {
-    background-color: aquamarine;
-    padding: 20px 20px;
+    min-height: 3.25rem;
+    padding: 0.875rem 1rem;
+    background-color: #f0eeeb;
+    border: 1px solid rgba(26, 26, 24, 0.08);
+    border-radius: 8px;
+    font-family: ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+    color: #1a1a18;
+    text-align: right;
+    word-break: break-all;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
+.board > div {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.board button {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #1a1a18;
+    background-color: #f5f4f1;
+    border: 1px solid rgba(26, 26, 24, 0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        transform 0.1s ease;
+}
+
+.board button:hover {
+    background-color: rgba(26, 26, 24, 0.06);
+    border-color: rgba(26, 26, 24, 0.12);
+}
+
+.board button:active {
+    transform: scale(0.98);
+}
+
+.board button.operator {
+    background-color: rgba(26, 26, 24, 0.04);
+    font-weight: 600;
+}
+
+.board button.operator:hover {
+    background-color: rgba(26, 26, 24, 0.08);
+}
+
+.board button.clear {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    color: #6b6a66;
+}
+
+.board button.result {
+    background-color: #1a1a18;
+    border-color: #1a1a18;
+    color: #fafaf8;
+    font-weight: 600;
+}
+
+.board button.result:hover {
+    background-color: #3d3d3a;
+    border-color: #3d3d3a;
 }
