@@ -1,0 +1,27 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+}
+
+.board button {
+    padding: 14px 28px;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen {
+    background-color: aquamarine;
+    padding: 20px 20px;
+}
