@@ -84,6 +84,7 @@ const readDigit = function (event) {
     else
         state.operand2 += input;
     updateScreen();
+    console.table(state);
 }
 
 const readOperator = function (event) {
@@ -91,10 +92,18 @@ const readOperator = function (event) {
     let input = node.textContent;
 
     // check if first operand is received
-    if (state.operand1)
+    if (state.operand1 && !state.operand2)
         state.operator = input;
-
+    // complete operation if after complete state
+    else if (state.operand1 && state.operand2)
+    {
+        result = operate (state.operand1, state.operator, state.operand2);
+        state.emptyState();
+        state.operand1 = result;
+        state.operator = input;
+    }
     updateScreen();
+    console.table(state);
 }
 
 const readResult = function (event) {
@@ -104,12 +113,14 @@ const readResult = function (event) {
         state.emptyState();
         updateScreen();
     }
+    console.table(state);
 }
 
 const readClean = function (event) {
     state.emptyState();
     state.result = "";
     updateScreen();
+    console.table(state);
 }
 
 // add eventListeners to buttons
@@ -125,3 +136,4 @@ buttons.forEach((button) => {
         button.addEventListener("click", readClean);
 });
 
+console.table(state);
