@@ -23,10 +23,14 @@ const DEFAULT_SCREEN_CONTENT = "0";
 // screen setup
 const screen  = document.querySelector(".screen");
 function updateScreen () {
+    screen.style.color = "#1a1a18";
     if (state.isEmptyState())
         screen.textContent = DEFAULT_SCREEN_CONTENT;
     else
         screen.textContent = `${state.operand1}${state.operator}${state.operand2}${state.result}`;
+
+    if (screen.textContent === "Math Error!")
+        screen.style.color = "red";
 }
 updateScreen();
 
@@ -47,6 +51,8 @@ function multiply (a, b) {
 
 // division operation
 function divide (a, b) {
+    if (b === "0")
+        return "Math Error!"
     return a/b;
 }
 
@@ -86,7 +92,7 @@ const readOperator = function (event) {
 
     // check if first operand is received
     if (state.operand1)
-        state.operator += input;
+        state.operator = input;
 
     updateScreen();
 }
@@ -100,6 +106,12 @@ const readResult = function (event) {
     }
 }
 
+const readClean = function (event) {
+    state.emptyState();
+    state.result = "";
+    updateScreen();
+}
+
 // add eventListeners to buttons
 const buttons = document.querySelectorAll(".board button");
 buttons.forEach((button) => {
@@ -109,5 +121,7 @@ buttons.forEach((button) => {
         button.addEventListener("click", readOperator);
     else if (button.classList.contains("result"))
         button.addEventListener("click", readResult);
+    else if (button.classList.contains("clear"))
+        button.addEventListener("click", readClean);
 });
 
