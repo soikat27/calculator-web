@@ -1,62 +1,74 @@
 // ----- VARIABLES -----
+/** Represents the calculator state. */
+const DEFAULT_SCREEN_CONTENT = "0";
 let state = {
     operand1: "",
     operator: "",
     operand2: "",
     result  : "",
 
+    /**
+     * Checks if calculator is completely empty.
+     * @returns {boolean}
+     */
     isEmptyState: function () {
         return (!this.operand1 && !this.operator && !this.operand2 && !this.result);
     },
+
+    /**
+     * Checks if calculation can be performed.
+     * @returns {boolean}
+     */
     isValidState: function () {
         return (this.operand1 && this.operator && this.operand2);
     },
+
+    /**
+     * Resets operands and operator.
+     */
     emptyState: function () {
         this.operand1 = "";
         this.operator = "";
         this.operand2 = "";
     }
 }
-const DEFAULT_SCREEN_CONTENT = "0";
 
 // ----- FUNCTIONS -----
-// screen setup
-const screen  = document.querySelector(".screen");
-function updateScreen () {
-    screen.style.color = "#1a1a18";
-    if (state.isEmptyState())
-        screen.textContent = DEFAULT_SCREEN_CONTENT;
-    else
-        screen.textContent = `${state.operand1}${state.operator}${state.operand2}${state.result}`;
 
-    if (screen.textContent === "Math Error!")
-        screen.style.color = "red";
-}
-updateScreen();
-
-// Addition operation
+/**
+ * Adds two numbers.
+ */
 function add (a, b) {
-    return Number(a)+Number(b);
+    return String(Number(a)+Number(b));
 }
 
-// subtraction operation
+/**
+ * Subtracts b from a.
+ */
 function subtract (a, b) {
-    return a-b;
+    return String(Number(a)-Number(b));
 }
 
-// multiplication operation
+/**
+ * Multiplies two numbers.
+ */
 function multiply (a, b) {
-    return a*b;
+    return String(Number(a)*Number(b));
 }
 
-// division operation
+/**
+ * Divides a by b.
+ * Returns error string if division by zero.
+ */
 function divide (a, b) {
-    if (b === "0")
+    if (Number(b) === "0")
         return "Math Error!"
-    return a/b;
+    return String(Number(a)/Number(b));
 }
 
-// general operator
+/**
+ * Performs calculation based on operator.
+ */
 function operate(a, operator, b) {
     switch(operator)
     {
@@ -73,67 +85,97 @@ function operate(a, operator, b) {
     }
 }
 
-// eventListener functions
-const readDigit = function (event) {
+// Initial screen setup...
+const screen  = document.querySelector(".screen");
+/**
+ * Updates the calculator display.
+ */
+function updateScreen () {
+    screen.style.color = "#1a1a18";
+
+    if (state.isEmptyState())
+        screen.textContent = DEFAULT_SCREEN_CONTENT;
+    else
+        screen.textContent = `${state.operand1}${state.operator}${state.operand2}${state.result}`;
+
+    if (screen.textContent === "Math Error!")
+        screen.style.color = "red";
+}
+
+updateScreen();
+
+// EventHandlers (buttons)...
+/**
+ * Handles digit button clicks.
+ */
+const handleDigit = function (event) {
     let node = event.target;
     let input = node.textContent;
     state.result = "";
-    // check if first operand
+    
     if (!state.operator)
         state.operand1 += input;
     else
         state.operand2 += input;
+
     updateScreen();
-    console.table(state);
 }
 
-const readOperator = function (event) {
+/**
+ * Handles operator button clicks.
+ */
+const handleOperator = function (event) {
     let node = event.target;
     let input = node.textContent;
 
     // check if first operand is received
     if (state.operand1 && !state.operand2)
         state.operator = input;
-    // complete operation if after complete state
+    // complete operation on operator input after complete state
     else if (state.operand1 && state.operand2)
     {
-        result = operate (state.operand1, state.operator, state.operand2);
+        let result = operate (state.operand1, state.operator, state.operand2);
         state.emptyState();
         state.operand1 = result;
         state.operator = input;
     }
+
     updateScreen();
-    console.table(state);
 }
 
-const readResult = function (event) {
+/**
+ * Handles equals button.
+ */
+const handleResult = function (event) {
     if (state.isValidState())
     {
         state.result = operate (state.operand1, state.operator, state.operand2);
         state.emptyState();
         updateScreen();
     }
-    console.table(state);
 }
 
-const readClean = function (event) {
+/**
+ * Handles clear button.
+ */
+const handleClean = function (event) {
     state.emptyState();
     state.result = "";
     updateScreen();
-    console.table(state);
 }
 
-// add eventListeners to buttons
+/**
+ * Add appropriate EventListeners to buttons
+ */
 const buttons = document.querySelectorAll(".board button");
+
 buttons.forEach((button) => {
     if (button.classList.contains("digit"))
-        button.addEventListener("click", readDigit);
+        button.addEventListener("click", handleDigit);
     else if (button.classList.contains("operator"))
-        button.addEventListener("click", readOperator);
+        button.addEventListener("click", handleOperator);
     else if (button.classList.contains("result"))
-        button.addEventListener("click", readResult);
+        button.addEventListener("click", handleResult);
     else if (button.classList.contains("clear"))
-        button.addEventListener("click", readClean);
+        button.addEventListener("click", handleClean);
 });
-
-console.table(state);
