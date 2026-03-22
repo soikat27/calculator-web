@@ -5,14 +5,13 @@ let state = {
     operand1: "",
     operator: "",
     operand2: "",
-    result  : "",
 
     /**
      * Checks if calculator is completely empty.
      * @returns {boolean}
      */
     isEmptyState: function () {
-        return (!this.operand1 && !this.operator && !this.operand2 && !this.result);
+        return (!this.operand1 && !this.operator && !this.operand2);
     },
 
     /**
@@ -61,7 +60,7 @@ function multiply (a, b) {
  * Returns error string if division by zero.
  */
 function divide (a, b) {
-    if (Number(b) === "0")
+    if (Number(b) === 0)
         return "Math Error!"
     return String(Number(a)/Number(b));
 }
@@ -96,10 +95,14 @@ function updateScreen () {
     if (state.isEmptyState())
         screen.textContent = DEFAULT_SCREEN_CONTENT;
     else
-        screen.textContent = `${state.operand1}${state.operator}${state.operand2}${state.result}`;
+        screen.textContent = `${state.operand1}${state.operator}${state.operand2}`;
 
     if (screen.textContent === "Math Error!")
+    {
         screen.style.color = "red";
+        state.emptyState();
+    }
+        
 }
 
 updateScreen();
@@ -111,7 +114,6 @@ updateScreen();
 const handleDigit = function (event) {
     let node = event.target;
     let input = node.textContent;
-    state.result = "";
     
     if (!state.operator)
         state.operand1 += input;
@@ -149,8 +151,9 @@ const handleOperator = function (event) {
 const handleResult = function (event) {
     if (state.isValidState())
     {
-        state.result = operate (state.operand1, state.operator, state.operand2);
+        let result = operate (state.operand1, state.operator, state.operand2);
         state.emptyState();
+        state.operand1 = result;
         updateScreen();
     }
 }
@@ -160,7 +163,6 @@ const handleResult = function (event) {
  */
 const handleClean = function (event) {
     state.emptyState();
-    state.result = "";
     updateScreen();
 }
 
