@@ -3,9 +3,53 @@ let state = {
     operand1: "",
     operator: "",
     operand2: "",
+    result  : "",
+
+    isEmptyState: function () {
+        return (!this.operand1 && !this.operator && !this.operand2 && !this.result);
+    },
+    isValidState: function () {
+        return (this.operand1 && this.operator && this.operand2);
+    },
+    emptyState: function () {
+        this.operand1 = "";
+        this.operator = "";
+        this.operand2 = "";
+    }
 }
+const DEFAULT_SCREEN_CONTENT = "0";
 
 // ----- FUNCTIONS -----
+// screen setup
+const screen  = document.querySelector(".screen");
+function updateScreen () {
+    if (state.isEmptyState())
+        screen.textContent = DEFAULT_SCREEN_CONTENT;
+    else
+        screen.textContent = `${state.operand1}${state.operator}${state.operand2}${state.result}`;
+}
+updateScreen();
+
+// Addition operation
+function add (a, b) {
+    return Number(a)+Number(b);
+}
+
+// subtraction operation
+function subtract (a, b) {
+    return a-b;
+}
+
+// multiplication operation
+function multiply (a, b) {
+    return a*b;
+}
+
+// division operation
+function divide (a, b) {
+    return a/b;
+}
+
 // general operator
 function operate(a, operator, b) {
     switch(operator)
@@ -23,61 +67,47 @@ function operate(a, operator, b) {
     }
 }
 
-// Addition operation
-function add (a, b) {
-    return Number(a)+Number(b);
+// eventListener functions
+const readDigit = function (event) {
+    let node = event.target;
+    let input = node.textContent;
+    state.result = "";
+    // check if first operand
+    if (!state.operator)
+        state.operand1 += input;
+    else
+        state.operand2 += input;
+    updateScreen();
 }
 
-// subtraction operation
-function subtract (a, b) {
-    return a-b;
-}
-
-// mult. operation
-function multiply (a, b) {
-    return a*b;
-}
-
-// division operation
-function divide (a, b) {
-    return a/b;
-}
-
-// onclick: init. the variables and update screen
-const read = function read (e) {
-    let node = e.target;
+const readOperator = function (event) {
+    let node = event.target;
     let input = node.textContent;
 
-    if (node.classList.contains("digit") && !operator)
-        operand1 += input;
-    else if(node.classList.contains("operator") && operand1 && !operand2) {
-        operator = input;
-    }
-    else if(node.classList.contains("operator") && operand2) {
-        result = "" + operate(Number(operand1), operator, Number(operand2));
-    }
-    else if (operator)
-        operand2 += input;
+    // check if first operand is received
+    if (state.operand1)
+        state.operator += input;
 
-    screen.textContent = `${operand1} ${operator} ${operand2} ${result}`;
+    updateScreen();
 }
 
-// read buttons
-const screen  = document.querySelector(".screen");
+const readResult = function (event) {
+    if (state.isValidState())
+    {
+        state.result = operate (state.operand1, state.operator, state.operand2);
+        state.emptyState();
+        updateScreen();
+    }
+}
+
+// add eventListeners to buttons
 const buttons = document.querySelectorAll(".board button");
 buttons.forEach((button) => {
-    if (button.classList.contains("digit") || button.classList.contains("operator"))
-        button.addEventListener("click", read);
-    if (button.classList.contains("result"))
-        button.addEventListener("click", (e) => {
-            if (operand1 && operand2 && operator)
-            {
-                result = "" + operate(Number(operand1), operator, Number(operand2));
-                operand2 = "";
-                operator = "";
-                operand1 = ""+result
-                screen.textContent = `${result}`;
-            }
-    });
+    if (button.classList.contains("digit"))
+        button.addEventListener("click", readDigit);
+    else if (button.classList.contains("operator"))
+        button.addEventListener("click", readOperator);
+    else if (button.classList.contains("result"))
+        button.addEventListener("click", readResult);
 });
 
